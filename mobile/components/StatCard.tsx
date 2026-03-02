@@ -1,6 +1,39 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
+interface ProgressRingProps {
+  label: string
+  value: number
+  goal: number
+  unit?: string
+  color: string
+}
+
+export function ProgressRing({ label, value, goal, unit = 'g', color }: ProgressRingProps) {
+  const progress = Math.min(100, (value / goal) * 100)
+  const isComplete = value >= goal
+  
+  return (
+    <View style={styles.container}>
+      <View style={[styles.ring, { borderColor: isComplete ? '#22c55e' : `${color}30` }]}>
+        <View style={[styles.progressOverlay, { 
+          borderTopColor: isComplete ? '#22c55e' : color, 
+          borderRightColor: isComplete ? '#22c55e' : color,
+          transform: [{ rotate: `${(progress / 100) * 360 - 135}deg` }]
+        }]} />
+        <View style={styles.innerCircle}>
+          <Text style={[styles.value, { color: isComplete ? '#22c55e' : color }]}>
+            {Math.round(value)}
+          </Text>
+          <Text style={styles.unit}>{unit}</Text>
+        </View>
+      </View>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.goalText}>{Math.round(goal)}{unit}</Text>
+    </View>
+  )
+}
+
 interface MacroRingProps {
   label: string
   value: number
@@ -45,19 +78,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
+    position: 'relative',
+  },
+  progressOverlay: {
+    position: 'absolute',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 4,
+    borderLeftColor: 'transparent',
+    borderBottomColor: 'transparent',
+  },
+  innerCircle: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   value: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   unit: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#666',
   },
   label: {
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+  },
+  goalText: {
+    fontSize: 10,
+    color: '#9ca3af',
+    marginTop: 1,
   },
   card: {
     backgroundColor: '#fff',

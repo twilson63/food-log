@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
+import { BarCodeScanner } from 'expo-barcode-scanner'
 import { api } from '@/services/api'
 import type { NutritionEstimate } from '@/types'
 
-type InputMode = 'photo' | 'manual'
+type InputMode = 'photo' | 'barcode' | 'manual'
 
 export default function AddEntryScreen() {
   const [mode, setMode] = useState<InputMode>('photo')
@@ -20,6 +21,47 @@ export default function AddEntryScreen() {
   const [visionEstimate, setVisionEstimate] = useState<NutritionEstimate | null>(null)
   const [photoUri, setPhotoUri] = useState<string | null>(null)
   const [photoBase64, setPhotoBase64] = useState<string | null>(null)
+  const [scanning, setScanning] = useState(false)
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null)
+  const [scanned, setScanned] = useState(false)
+  const [barcodeResult, setBarcodeResult] = useState<any>(null)
+
+  // Request camera permission for barcode scanner
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync()
+      setHasPermission(status === 'granted')
+    }
+    getBarCodeScannerPermissions()
+  }, [])
+
+  const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+    if (scanned) return
+    setScanned(true)
+    setAnalyzing(true)
+
+    try {
+      const result = await api.lookupBarcode(data)
+      
+      if (result.error && !result.description) {
+        Alert.alert('Not Found', `No product found for barcode ${data}`)
+        setScanned(false)
+      } else {
+        setBarcodeResult(result)
+        setDescription(result.description)
+        setCalories(String(Math.round(result.calories)))
+        setProtein(String(result.protein))
+        setCarbs(String(result.carbs))
+        setFat(String(result.fat))
+      }
+    } catch (err) {
+      console.error('Barcode lookup error:', err)
+      Alert.alert('Error', 'Failed to look up barcode')
+      setScanned(false)
+    } finally {
+      setAnalyzing(false)
+    }
+  }
 
   const pickImage = async () => {
     try {
@@ -99,10 +141,28 @@ export default function AddEntryScreen() {
         <View style={styles.modeToggle}>
           <TouchableOpacity
             style={[styles.modeButton, mode === 'photo' && styles.modeButtonActive]}
-            onPress={() => { setMode('photo'); setVisionEstimate(null); setPhotoBase64(null); }}
+            onPress={() => { 
+              setMode('photo'); 
+              setVisionEstimate(null); 
+              setPhotoBase64(null);
+              setScanned(false);
+              setBarcodeResult(null);
+            }}
           >
             <Text style={[styles.modeText, mode === 'photo' && styles.modeTextActive]}>
               📷 Photo
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'barcode' && styles.modeButtonActive]}
+            onPress={() => { 
+              setMode('barcode'); 
+              setScanned(false);
+              setBarcodeResult(null);
+            }}
+          >
+            <Text style={[styles.modeText, mode === 'barcode' && styles.modeTextActive]}>
+              📱 Barcode
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -155,6 +215,70 @@ export default function AddEntryScreen() {
                 {visionEstimate.notes && (
                   <Text style={styles.estimateNotes}>{visionEstimate.notes}</Text>
                 )}
+              </View>
+            )}
+          </View>
+        ) : mode === 'barcode' ? (
+          <View style={styles.barcodeSection}>
+            {hasPermission === null ? (
+              <Text style={styles.permissionText}>Requesting camera permission...</Text>
+            ) : !hasPermission ? (
+              <View style={styles.permissionDenied}>
+                <Text style={styles.permissionText}>Camera permission denied</Text>
+                <TouchableOpacity 
+                  style={styles.permissionButton}
+                  onPress={async () => {
+                    const { status } = await BarCodeScanner.requestPermissionsAsync()
+                    setHasPermission(status === 'granted')
+                  }}
+                >
+                  <Text style={styles.permissionButtonText}>Grant Permission</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.scannerContainer}>
+                <BarCodeScanner
+                  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                  style={styles.scanner}
+                />
+                <View style={styles.scannerOverlay}>
+                  <View style={styles.scanTarget} />
+                  <Text style={styles.scannerText}>
+                    {scanned ? 'Processing...' : 'Point camera at barcode'}
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            {analyzing && (
+              <View style={styles.analyzingContainer}>
+                <ActivityIndicator size="large" color="#2563eb" />
+                <Text style={styles.analyzingText}>Looking up product...</Text>
+              </View>
+            )}
+
+            {barcodeResult && !analyzing && (
+              <View style={styles.barcodeResultCard}>
+                <View style={styles.barcodeHeader}>
+                  <Text style={styles.barcodeIcon}>✅</Text>
+                  <Text style={styles.barcodeTitle}>Product Found!</Text>
+                </View>
+                {barcodeResult.imageUrl && (
+                  <Image source={{ uri: barcodeResult.imageUrl }} style={styles.productImage} />
+                )}
+                <Text style={styles.productName}>{barcodeResult.description}</Text>
+                {barcodeResult.brand && (
+                  <Text style={styles.productBrand}>{barcodeResult.brand}</Text>
+                )}
+                <Text style={styles.nutrientsLabel}>
+                  Per 100g: {Math.round(barcodeResult.calories)} cal | {Math.round(barcodeResult.protein)}g protein
+                </Text>
+                <TouchableOpacity 
+                  style={styles.rescanButton}
+                  onPress={() => { setScanned(false); setBarcodeResult(null); }}
+                >
+                  <Text style={styles.rescanButtonText}>Scan Another</Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -409,6 +533,117 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
+  },
+  // Barcode Scanner Styles
+  barcodeSection: {
+    marginBottom: 20,
+  },
+  permissionText: {
+    fontSize: 14,
+    color: '#6b7280',
+    textAlign: 'center',
+    padding: 20,
+  },
+  permissionDenied: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 24,
+    alignItems: 'center',
+  },
+  permissionButton: {
+    backgroundColor: '#2563eb',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  permissionButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  scannerContainer: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    height: 300,
+    position: 'relative',
+  },
+  scanner: {
+    width: '100%',
+    height: '100%',
+  },
+  scannerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  scanTarget: {
+    width: 250,
+    height: 100,
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderRadius: 12,
+    backgroundColor: 'transparent',
+  },
+  scannerText: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 16,
+    fontWeight: '500',
+  },
+  barcodeResultCard: {
+    backgroundColor: '#f0fdf4',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#86efac',
+  },
+  barcodeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  barcodeIcon: {
+    fontSize: 24,
+    marginRight: 8,
+  },
+  barcodeTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#166534',
+  },
+  productImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+    textAlign: 'center',
+  },
+  productBrand: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 4,
+  },
+  nutrientsLabel: {
+    fontSize: 13,
+    color: '#4b5563',
+    marginTop: 8,
+  },
+  rescanButton: {
+    marginTop: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  rescanButtonText: {
+    color: '#2563eb',
     fontWeight: '600',
   },
 })

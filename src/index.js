@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import entriesRoutes from './routes/entries.js'
+import barcodeRoutes from './routes/barcode.js'
 import { visionService } from './services/vision.js'
 
 const app = new Hono()
@@ -64,6 +65,7 @@ app.get('/vision/status', (c) => c.json(visionService.getStatus()))
 
 // Routes
 app.route('/entries', entriesRoutes)
+app.route('/barcode', barcodeRoutes)
 
 // 404 handler
 app.notFound((c) => c.json({ error: 'Not found' }, 404))

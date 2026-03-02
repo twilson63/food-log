@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl, ActivityIndicator, 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link } from 'expo-router'
 import { useToday } from '@/hooks/useApi'
-import { MacroRing } from '@/components/StatCard'
+import { useGoals } from '@/hooks/useGoals'
+import { ProgressRing } from '@/components/StatCard'
 import { EntryCard } from '@/components/EntryCard'
 
 export default function HomeScreen() {
   const { data, loading, error, refresh } = useToday()
+  const { goals } = useGoals()
 
   const today = data?.date ?? new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -56,23 +58,40 @@ export default function HomeScreen() {
             <Text style={styles.caloriesValue}>
               {data?.totals?.calories ?? 0}
             </Text>
-            <Text style={styles.caloriesLabel}>calories today</Text>
+            <Text style={styles.caloriesLabel}>of {goals.calories} calories</Text>
+            <View style={styles.caloriesBar}>
+              <View 
+                style={[
+                  styles.caloriesBarFill, 
+                  { 
+                    width: `${Math.min(100, ((data?.totals?.calories ?? 0) / goals.calories) * 100)}%`,
+                    backgroundColor: ((data?.totals?.calories ?? 0) > goals.calories) ? '#ef4444' : '#2563eb'
+                  }
+                ]} 
+              />
+            </View>
+            {((data?.totals?.calories ?? 0) > goals.calories) && (
+              <Text style={styles.overBudget}>⚠️ Over daily goal by {((data?.totals?.calories ?? 0) - goals.calories)} cal</Text>
+            )}
           </View>
 
           <View style={styles.macrosRow}>
-            <MacroRing
+            <ProgressRing
               label="Protein"
               value={data?.totals?.protein ?? 0}
+              goal={goals.protein}
               color="#ef4444"
             />
-            <MacroRing
+            <ProgressRing
               label="Carbs"
               value={data?.totals?.carbs ?? 0}
+              goal={goals.carbs}
               color="#3b82f6"
             />
-            <MacroRing
+            <ProgressRing
               label="Fat"
               value={data?.totals?.fat ?? 0}
+              goal={goals.fat}
               color="#f59e0b"
             />
           </View>
@@ -216,6 +235,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6b7280',
     marginTop: 4,
+    marginBottom: 8,
+  },
+  caloriesBar: {
+    width: '100%',
+    height: 8,
+    backgroundColor: '#e5e7eb',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  caloriesBarFill: {
+    height: '100%',
+    backgroundColor: '#2563eb',
+    borderRadius: 4,
+  },
+  overBudget: {
+    fontSize: 12,
+    color: '#ef4444',
+    marginTop: 8,
+    fontWeight: '500',
   },
   macrosRow: {
     flexDirection: 'row',

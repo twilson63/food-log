@@ -33,3 +33,11 @@ build/
 # Mobile app
 mobile/node_modules/
 mobile/.expo/
+mobile/android/
+mobile/ios/
+mobile/dist/
+mobile/dist-android/
+mobile/dist-test/
+
+# Archives
+*.zip

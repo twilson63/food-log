@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl, ActivityIndicator, 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link } from 'expo-router'
 import { useToday } from '@/hooks/useApi'
+import { useGoals } from '@/hooks/useGoals'
 import { api } from '@/services/api'
 import type { FoodEntry } from '@/types'
 
@@ -18,6 +19,7 @@ interface DaySummary {
 
 export default function HistoryScreen() {
   const { data: todayData, refresh: refreshToday } = useToday()
+  const { goals } = useGoals()
   const [history, setHistory] = useState<DaySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -140,21 +142,35 @@ export default function HistoryScreen() {
           <View style={styles.statCard}>
             <Text style={styles.statValue}>{todayCalories}</Text>
             <Text style={styles.statLabel}>Today</Text>
+            <Text style={[styles.statGoal, todayCalories > goals.calories && styles.statGoalOver]}>
+              {todayCalories > goals.calories 
+                ? `${todayCalories - goals.calories} over` 
+                : `${goals.calories - todayCalories} left`}
+            </Text>
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statValue}>{avgCalories}</Text>
             <Text style={styles.statLabel}>Daily Avg</Text>
+            <Text style={styles.statGoal}>goal: {goals.calories}</Text>
           </View>
         </View>
 
         {/* Bar Chart */}
         <View style={styles.chartCard}>
-          <Text style={styles.chartTitle}>Calories per Day</Text>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Calories per Day</Text>
+            <Text style={styles.chartGoal}>Goal: {goals.calories}</Text>
+          </View>
           <View style={styles.barChart}>
+            {/* Goal line indicator */}
+            <View style={styles.goalLineContainer}>
+              <View style={styles.goalLine} />
+            </View>
             {history.map((day, index) => {
-              const maxCal = Math.max(...history.map(d => d.calories), 2000)
+              const maxCal = Math.max(...history.map(d => d.calories), goals.calories)
               const height = maxCal > 0 ? Math.max((day.calories / maxCal) * 100, 4) : 4
               const isToday = index === 0
+              const overGoal = day.calories > goals.calories
               
               return (
                 <View key={day.date} style={styles.barColumn}>
@@ -164,7 +180,8 @@ export default function HistoryScreen() {
                   <View style={[
                     styles.bar,
                     { height: `${height}%` as any },
-                    isToday && styles.barToday
+                    isToday && styles.barToday,
+                    overGoal && styles.barOver
                   ]} />
                   <Text style={[styles.barLabel, isToday && styles.barLabelToday]}>
                     {day.displayDate.slice(0, 3)}
@@ -298,6 +315,14 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     marginTop: 4,
   },
+  statGoal: {
+    fontSize: 11,
+    color: '#9ca3af',
+    marginTop: 2,
+  },
+  statGoalOver: {
+    color: '#ef4444',
+  },
   chartCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -309,17 +334,45 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  chartHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   chartTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#6b7280',
-    marginBottom: 12,
+  },
+  chartGoal: {
+    fontSize: 12,
+    color: '#9ca3af',
   },
   barChart: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     height: 100,
+    position: 'relative',
+  },
+  goalLineContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 1,
+    pointerEvents: 'none',
+  },
+  goalLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: '#22c55e',
+    opacity: 0.5,
+    top: '50%',
   },
   barColumn: {
     flex: 1,
@@ -340,6 +393,9 @@ const styles = StyleSheet.create({
   },
   barToday: {
     backgroundColor: '#2563eb',
+  },
+  barOver: {
+    backgroundColor: '#ef4444',
   },
   barLabel: {
     fontSize: 10,

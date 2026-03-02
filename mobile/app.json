@@ -25,9 +25,7 @@
       },
       "config": {
         "usesNonExemptEncryption": false
-      },
-      "applePrivacyPolicyURL": "https://foodlog.app/privacy",
-      "appleLanguages": ["en"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -62,7 +60,9 @@
           "photosPermission": "Allow FoodLog to access your photo library to select food photos for tracking."
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "expo-barcode-scanner",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

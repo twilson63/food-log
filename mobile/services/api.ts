@@ -119,6 +119,27 @@ class ApiService {
   async getVisionStatus(): Promise<{ configured: boolean; model: string; provider: string }> {
     return this.request('/vision/status')
   }
+
+  /**
+   * Look up a product by barcode
+   */
+  async lookupBarcode(barcode: string): Promise<{
+    barcode: string
+    description: string
+    brand?: string
+    imageUrl?: string
+    servingSize?: string
+    calories: number
+    protein: number
+    carbs: number
+    fat: number
+    confidence: number
+    source: string
+    error?: string
+    fallback?: boolean
+  }> {
+    return this.request(`/barcode/lookup/${barcode}`)
+  }
 }
 
 export const api = new ApiService(API_BASE)
