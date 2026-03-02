@@ -14,9 +14,8 @@ RUN npm ci --only=production
 
 # Copy source
 COPY src ./src
-COPY data ./data
 
-# Create data directory if not exists
+# Create data directory for SQLite
 RUN mkdir -p /app/data
 
 # Environment

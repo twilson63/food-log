@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function Dashboard() {
   const navigate = useNavigate();
   const { sessionId } = useParams();
+  const basePath = sessionId ? `/s/${sessionId}` : '';
   const queryClient = useQueryClient();
   const [dailyGoals, setDailyGoals] = useState({ calories: 2000, protein: 150, carbs: 200, fat: 65 });
   
