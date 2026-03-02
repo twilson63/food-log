@@ -1,12 +1,13 @@
 {
-  "name": "FoodLog",
+  "name": "FoodLog - AI Food Tracker",
   "short_name": "FoodLog",
-  "description": "Track your meals with AI-powered nutrition analysis",
+  "description": "Track your meals with AI-powered nutrition analysis. Snap a photo to log calories, protein, carbs, and fat.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#22c55e",
   "orientation": "portrait-primary",
+  "categories": ["health", "lifestyle", "food"],
   "icons": [
     {
       "src": "/favicon.svg",
@@ -19,6 +20,16 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Add Food",
+      "short_name": "Add",
+      "description": "Log a new food entry",
+      "url": "/add",
+      "icons": [{ "src": "/favicon.svg", "sizes": "96x96" }]
     }
   ]
 }

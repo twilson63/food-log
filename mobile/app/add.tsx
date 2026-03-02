@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
@@ -19,6 +19,7 @@ export default function AddEntryScreen() {
   const [analyzing, setAnalyzing] = useState(false)
   const [visionEstimate, setVisionEstimate] = useState<NutritionEstimate | null>(null)
   const [photoUri, setPhotoUri] = useState<string | null>(null)
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null)
 
   const pickImage = async () => {
     try {
@@ -37,6 +38,7 @@ export default function AddEntryScreen() {
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0]
         setPhotoUri(asset.uri)
+        setPhotoBase64(asset.base64 || null)
         setAnalyzing(true)
 
         try {
@@ -63,14 +65,15 @@ export default function AddEntryScreen() {
   }
 
   const handleSubmit = async () => {
-    if (!description && !calories) {
-      Alert.alert('Missing info', 'Please enter at least a description or calories')
+    if (!description && !calories && !photoBase64) {
+      Alert.alert('Missing info', 'Please enter at least a description or calories, or take a photo')
       return
     }
 
     setLoading(true)
     try {
       const entryData = {
+        photo: photoBase64 || undefined,
         description: description || undefined,
         calories: calories ? parseInt(calories, 10) : undefined,
         protein: protein ? parseFloat(protein) : undefined,
@@ -96,7 +99,7 @@ export default function AddEntryScreen() {
         <View style={styles.modeToggle}>
           <TouchableOpacity
             style={[styles.modeButton, mode === 'photo' && styles.modeButtonActive]}
-            onPress={() => { setMode('photo'); setVisionEstimate(null); }}
+            onPress={() => { setMode('photo'); setVisionEstimate(null); setPhotoBase64(null); }}
           >
             <Text style={[styles.modeText, mode === 'photo' && styles.modeTextActive]}>
               📷 Photo
@@ -121,7 +124,13 @@ export default function AddEntryScreen() {
 
             {photoUri && (
               <View style={styles.photoPreview}>
-                <Text style={styles.photoPreviewText}>Photo captured ✓</Text>
+                <Image source={{ uri: photoUri }} style={styles.previewImage} />
+                <TouchableOpacity 
+                  style={styles.retakeButton}
+                  onPress={() => { setPhotoUri(null); setPhotoBase64(null); setVisionEstimate(null); }}
+                >
+                  <Text style={styles.retakeButtonText}>✕ Retake</Text>
+                </TouchableOpacity>
               </View>
             )}
 
@@ -291,14 +300,28 @@ const styles = StyleSheet.create({
     color: '#4b5563',
   },
   photoPreview: {
-    backgroundColor: '#dcfce7',
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginTop: 12,
+    marginTop: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
   },
-  photoPreviewText: {
-    color: '#15803d',
+  previewImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+  },
+  retakeButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  retakeButtonText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: '500',
   },
   analyzingContainer: {

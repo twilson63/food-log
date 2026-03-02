@@ -130,7 +130,7 @@ export default function Dashboard() {
             <div className="text-4xl mb-3">🍽️</div>
             <p className="text-gray-500 dark:text-gray-400">No food logged yet today</p>
             <button 
-              onClick={() => navigate('/add')}
+              onClick={() => navigate(`${basePath}/add`)}
               className="mt-4 btn-primary px-6 py-2"
             >
               Add Your First Meal

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, keys } from '../api.js';
-import { Camera, Upload, X, Loader } from 'lucide-react';
+import { Camera, Upload, X, Loader, Utensils } from 'lucide-react';
 
 export default function AddFood() {
   const navigate = useNavigate();
@@ -140,7 +140,7 @@ export default function AddFood() {
         </div>
 
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`${basePath}/`)}
           className="w-full btn-ghost"
         >
           Cancel
@@ -155,7 +155,7 @@ export default function AddFood() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analyzing</h1>
-          <button onClick={() => navigate('/add')} className="text-gray-400 hover:text-gray-600">
+          <button onClick={() => navigate(`${basePath}/add`)} className="text-gray-400 hover:text-gray-600">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -234,7 +234,7 @@ export default function AddFood() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Entry</h1>
-          <button onClick={() => navigate('/add')} className="text-gray-400 hover:text-gray-600">
+          <button onClick={() => navigate(`${basePath}/add`)} className="text-gray-400 hover:text-gray-600">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -295,7 +295,7 @@ export default function AddFood() {
         </div>
 
         <div className="flex gap-3">
-          <button onClick={() => navigate('/add')} className="flex-1 btn-secondary">
+          <button onClick={() => navigate(`${basePath}/add`)} className="flex-1 btn-secondary">
             Cancel
           </button>
           <button onClick={handleSave} className="flex-1 btn-primary">
@@ -315,7 +315,7 @@ export default function AddFood() {
         <p className="text-gray-500 dark:text-gray-400">Your food has been logged</p>
         
         <div className="flex gap-3">
-          <button onClick={() => navigate('/')} className="flex-1 btn-secondary">
+          <button onClick={() => navigate(`${basePath}/`)} className="flex-1 btn-secondary">
             View Today
           </button>
           <button onClick={() => setStep('select')} className="flex-1 btn-primary">

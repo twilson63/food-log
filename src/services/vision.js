@@ -54,15 +54,30 @@ If you can't identify the food or it's not food, still respond with your best es
 
 /**
  * Estimate nutrition from an image
- * @param {string} imageSource - Base64 data URL or URL to image
+ * @param {Object|string} input - Object with {photo, photoUrl} or string (base64/URL)
  * @returns {Promise<Object>} Nutrition estimate
  */
-export async function estimateNutrition(imageSource) {
+export async function estimateNutrition(input) {
   const provider = getProvider();
   
   // If no API key, return mock estimate
   if (!provider) {
-    return getMockEstimate();
+    return { ...getMockEstimate(), model: 'mock' };
+  }
+
+  // Normalize input to a single image source string
+  let imageSource;
+  if (typeof input === 'object' && input !== null) {
+    // Object format: { photo: 'base64...', photoUrl: 'https://...' }
+    imageSource = input.photoUrl || input.photo;
+  } else {
+    // String format (backwards compatible)
+    imageSource = input;
+  }
+
+  if (!imageSource) {
+    console.error('Vision: No image source provided');
+    return { ...getMockEstimate(), model: 'mock', error: 'No image source' };
   }
 
   try {
@@ -122,31 +137,29 @@ export async function estimateNutrition(imageSource) {
 
     if (!response.ok) {
       console.error('Vision API error:', response.status, await response.text());
-      return getMockEstimate();
+      return { ...getMockEstimate(), model: provider.model, error: 'API error' };
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
     
     if (!content) {
-      return getMockEstimate();
+      return { ...getMockEstimate(), model: provider.model, error: 'No content' };
     }
 
     // Parse JSON from response
     try {
       // Handle markdown code blocks
       const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
-      return JSON.parse(content);
+      const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(content);
+      return { ...parsed, model: provider.model };
     } catch {
       console.error('Failed to parse vision response:', content);
-      return getMockEstimate();
+      return { ...getMockEstimate(), model: provider.model, error: 'Parse error' };
     }
   } catch (error) {
     console.error('Vision estimation error:', error);
-    return getMockEstimate();
+    return { ...getMockEstimate(), model: provider?.model || 'mock', error: error.message };
   }
 }
 

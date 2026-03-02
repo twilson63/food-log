@@ -47,6 +47,13 @@ class ApiService {
   }
 
   /**
+   * Get entries for a specific date
+   */
+  async getEntriesByDate(date: string): Promise<FoodEntry[]> {
+    return this.request<FoodEntry[]>(`/entries/date/${date}`)
+  }
+
+  /**
    * Get a single entry
    */
   async getEntry(id: number): Promise<FoodEntry> {

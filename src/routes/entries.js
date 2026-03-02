@@ -57,6 +57,24 @@ app.get('/today', (c) => {
   })
 })
 
+// GET /entries/date/:date - Get entries for a specific date
+app.get('/date/:date', (c) => {
+  const date = c.req.param('date')
+  
+  // Validate date format (YYYY-MM-DD)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return c.json({ error: 'Invalid date format. Use YYYY-MM-DD' }, 400)
+  }
+  
+  const entries = entryRepository.findByDate(date)
+  
+  return c.json({
+    date,
+    entries,
+    count: entries.length
+  })
+})
+
 // GET /entries/stats/recent - Get recent days summary
 app.get('/stats/recent', (c) => {
   const { days = '7' } = c.req.query()

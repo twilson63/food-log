@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
 import { api } from '@/services/api'
@@ -85,6 +85,17 @@ export default function EntryDetailScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
+        {/* Photo */}
+        {(entry.photo || entry.photoUrl) && (
+          <View style={styles.photoContainer}>
+            <Image 
+              source={{ uri: entry.photoUrl || `data:image/jpeg;base64,${entry.photo}` }} 
+              style={styles.photo}
+              resizeMode="cover"
+            />
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.description}>
@@ -163,6 +174,16 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+  },
+  photoContainer: {
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  photo: {
+    width: '100%',
+    height: 200,
+    borderRadius: 16,
   },
   header: {
     alignItems: 'center',

@@ -126,6 +126,12 @@ const statements = {
     ORDER BY timestamp DESC
   `),
   
+  getEntriesByDate: db.prepare(`
+    SELECT * FROM entries 
+    WHERE date(timestamp) = ?
+    ORDER BY timestamp DESC
+  `),
+  
   deleteEntry: db.prepare(`DELETE FROM entries WHERE id = ?`),
   
   updateEntry: db.prepare(`
@@ -216,6 +222,11 @@ export const entryRepository = {
 
   getToday() {
     const rows = statements.getTodayEntries.all()
+    return rows.map(rowToJSON)
+  },
+
+  findByDate(date) {
+    const rows = statements.getEntriesByDate.all(date)
     return rows.map(rowToJSON)
   },
 

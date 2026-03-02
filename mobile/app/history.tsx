@@ -11,7 +11,9 @@ interface DaySummary {
   displayDate: string
   calories: number
   count: number
-  entries: FoodEntry[]
+  protein: number
+  carbs: number
+  fat: number
 }
 
 export default function HistoryScreen() {
@@ -20,6 +22,8 @@ export default function HistoryScreen() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedDay, setExpandedDay] = useState<string | null>(null)
+  const [expandedEntries, setExpandedEntries] = useState<FoodEntry[]>([])
+  const [loadingEntries, setLoadingEntries] = useState(false)
 
   const loadHistory = useCallback(async () => {
     try {
@@ -32,7 +36,9 @@ export default function HistoryScreen() {
         displayDate: formatDate(day.date),
         calories: day.total_calories || 0,
         count: day.entry_count || 0,
-        entries: day.entries || []
+        protein: day.total_protein || 0,
+        carbs: day.total_carbs || 0,
+        fat: day.total_fat || 0
       }))
       
       setHistory(summaries)
@@ -46,6 +52,29 @@ export default function HistoryScreen() {
   useEffect(() => {
     loadHistory()
   }, [loadHistory])
+
+  const loadEntriesForDay = async (date: string) => {
+    setLoadingEntries(true)
+    try {
+      const entries = await api.getEntriesByDate(date)
+      setExpandedEntries(entries)
+    } catch (err) {
+      console.error('Failed to load entries:', err)
+      setExpandedEntries([])
+    } finally {
+      setLoadingEntries(false)
+    }
+  }
+
+  const handleDayPress = (date: string) => {
+    if (expandedDay === date) {
+      setExpandedDay(null)
+      setExpandedEntries([])
+    } else {
+      setExpandedDay(date)
+      loadEntriesForDay(date)
+    }
+  }
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr)
@@ -154,7 +183,7 @@ export default function HistoryScreen() {
             <TouchableOpacity
               key={day.date}
               style={styles.dayCard}
-              onPress={() => setExpandedDay(expandedDay === day.date ? null : day.date)}
+              onPress={() => handleDayPress(day.date)}
               activeOpacity={0.7}
             >
               <View style={styles.dayHeader}>
@@ -170,27 +199,33 @@ export default function HistoryScreen() {
                 </View>
               </View>
               
-              {expandedDay === day.date && day.entries.length > 0 && (
+              {expandedDay === day.date && (
                 <View style={styles.entriesList}>
-                  {day.entries.map((entry) => (
-                    <Link
-                      key={entry.id}
-                      href={`/entry/${entry.id}`}
-                      asChild
-                    >
-                      <View style={styles.entryItem}>
-                        <View style={styles.entryInfo}>
-                          <Text style={styles.entryDesc}>
-                            {entry.description || 'Food Entry'}
+                  {loadingEntries ? (
+                    <ActivityIndicator size="small" color="#2563eb" style={{ marginVertical: 12 }} />
+                  ) : expandedEntries.length > 0 ? (
+                    expandedEntries.map((entry) => (
+                      <Link
+                        key={entry.id}
+                        href={`/entry/${entry.id}`}
+                        asChild
+                      >
+                        <TouchableOpacity style={styles.entryItem}>
+                          <View style={styles.entryInfo}>
+                            <Text style={styles.entryDesc}>
+                              {entry.description || 'Food Entry'}
+                            </Text>
+                            <Text style={styles.entryTime}>{formatTime(entry.timestamp)}</Text>
+                          </View>
+                          <Text style={styles.entryCalories}>
+                            {entry.calories || 0} cal
                           </Text>
-                          <Text style={styles.entryTime}>{formatTime(entry.timestamp)}</Text>
-                        </View>
-                        <Text style={styles.entryCalories}>
-                          {entry.calories || 0} cal
-                        </Text>
-                      </View>
-                    </Link>
-                  ))}
+                        </TouchableOpacity>
+                      </Link>
+                    ))
+                  ) : (
+                    <Text style={styles.noEntriesText}>No entries for this day</Text>
+                  )}
                 </View>
               )}
             </TouchableOpacity>
@@ -396,5 +431,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#2563eb',
+  },
+  noEntriesText: {
+    fontSize: 14,
+    color: '#9ca3af',
+    textAlign: 'center',
+    paddingVertical: 12,
   },
 })
