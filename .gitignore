@@ -36,8 +36,9 @@ mobile/.expo/
 mobile/android/
 mobile/ios/
 mobile/dist/
-mobile/dist-android/
-mobile/dist-test/
+mobile/dist-*/
+mobile/dist-ios/
+mobile/dist-web*/
 
 # Archives
 *.zip

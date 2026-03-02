@@ -27,6 +27,11 @@ food-log/
 - **Daily Tracking** - Today's entries with totals
 - **Stats** - Recent days summary
 
+## Live Deployments
+
+- **Web PWA:** https://foodlog-app.surge.sh/ (client-side, IndexedDB storage)
+- **Backend API:** https://api-production-6869.up.railway.app/ (SQLite persistence)
+
 ## Quick Start
 
 ```bash

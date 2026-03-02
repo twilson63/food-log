@@ -1,7 +1,9 @@
 import type { FoodEntry, TodayResponse, CreateEntryRequest, CreateEntryResponse, HealthResponse, NutritionEstimate } from '@/types'
 
 // Configure API base URL - change for development/production
-const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001'
+// Production: Railway backend
+// Development: Local backend
+const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'https://api-production-6869.up.railway.app'
 
 class ApiService {
   private baseUrl: string
