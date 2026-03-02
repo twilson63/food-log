@@ -7,7 +7,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://localhost:3001"
+        "EXPO_PUBLIC_API_URL": "http://localhost:3002"
       },
       "ios": {
         "simulator": true
@@ -49,5 +49,9 @@
         "serviceAccountKeyPath": "./google-services.json"
       }
     }
+  },
+  "cli": {
+    "version": ">= 10.0.0",
+    "appVersionSource": "remote"
   }
 }

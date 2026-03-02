@@ -26,11 +26,18 @@ app.get('/', (c) => c.json({
   service: 'food-log-api',
   version: '1.0.0'
 }))
-app.get('/health', (c) => c.json({ 
-  status: 'healthy',
-  database: 'sqlite',
-  vision: visionService.getStatus()
-}))
+app.get('/health', (c) => {
+  const visionStatus = visionService.getStatus()
+  return c.json({ 
+    status: 'healthy',
+    database: 'sqlite',
+    vision: {
+      configured: visionStatus.configured,
+      model: visionStatus.model,
+      provider: visionStatus.provider
+    }
+  })
+})
 
 // Vision endpoints
 app.post('/vision/analyze', async (c) => {
