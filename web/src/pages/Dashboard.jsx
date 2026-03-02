@@ -4,6 +4,7 @@ import { goals } from '../lib/storage.js';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit2, Trash2, Plus, Coffee, Apple, Utensils, Cookie, X } from 'lucide-react';
+import { useToast } from '../components/Toast.jsx';
 
 // Quick-add presets
 const QUICK_FOODS = [
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const { sessionId } = useParams();
   const basePath = sessionId ? `/s/${sessionId}` : '';
   const queryClient = useQueryClient();
+  const toast = useToast();
   const [dailyGoals, setDailyGoals] = useState({ calories: 2000, protein: 150, carbs: 200, fat: 65 });
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [addingFood, setAddingFood] = useState(null);
@@ -59,8 +61,9 @@ export default function Dashboard() {
         fat: food.fat,
       });
       queryClient.invalidateQueries({ queryKey: keys.today });
+      toast.success(`Added ${food.name}`);
     } catch (err) {
-      alert('Failed to add entry');
+      toast.error('Failed to add entry');
     }
     setAddingFood(null);
     setShowQuickAdd(false);
@@ -69,8 +72,13 @@ export default function Dashboard() {
   // Delete entry
   const handleDelete = async (id) => {
     if (confirm('Delete this entry?')) {
-      await api.deleteEntry(id);
-      queryClient.invalidateQueries({ queryKey: keys.today });
+      try {
+        await api.deleteEntry(id);
+        queryClient.invalidateQueries({ queryKey: keys.today });
+        toast.success('Entry deleted');
+      } catch (err) {
+        toast.error('Failed to delete entry');
+      }
     }
   };
 
