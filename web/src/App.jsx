@@ -8,6 +8,8 @@ import History from './pages/History.jsx';
 import Stats from './pages/Stats.jsx';
 import Settings from './pages/Settings.jsx';
 import Welcome from './pages/Welcome.jsx';
+import Privacy from './pages/Privacy.jsx';
+import Terms from './pages/Terms.jsx';
 import { getSession } from './lib/storage.js';
 
 const queryClient = new QueryClient();
@@ -26,6 +28,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
+          {/* Static pages */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          
           {/* Welcome/new session page */}
           <Route path="/" element={<RootRedirect />} />
           
