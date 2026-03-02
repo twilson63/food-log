@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api, keys } from '../api.js';
 import { useState } from 'react';
+import { HistorySkeleton } from '../components/Skeleton.jsx';
 
 export default function History() {
   const [expandedDay, setExpandedDay] = useState(null);
@@ -42,11 +43,7 @@ export default function History() {
   const maxCalories = Math.max(2000, ...days.map(d => d.calories));
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Loading...</div>
-      </div>
-    );
+    return <HistorySkeleton />;
   }
 
   if (error) {

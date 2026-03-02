@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api, keys } from '../api.js';
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { StatsSkeleton } from '../components/Skeleton.jsx';
 
 export default function Stats() {
   const [viewMode, setViewMode] = useState('week'); // 'week' | 'month'
@@ -99,11 +100,7 @@ export default function Stats() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-pulse text-gray-400">Loading statistics...</div>
-      </div>
-    );
+    return <StatsSkeleton />;
   }
 
   return (

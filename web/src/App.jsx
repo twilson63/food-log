@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from './components/Layout.jsx';
+import InstallPrompt from './components/InstallPrompt.jsx';
+import OfflineIndicator from './components/OfflineIndicator.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AddFood from './pages/AddFood.jsx';
 import EditEntry from './pages/EditEntry.jsx';
@@ -27,6 +29,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        {/* Offline indicator */}
+        <OfflineIndicator />
+        
+        {/* PWA install prompt */}
+        <InstallPrompt />
+        
         <Routes>
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />

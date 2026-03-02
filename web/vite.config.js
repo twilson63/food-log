@@ -8,6 +8,9 @@ export default defineConfig({
     react(),
     viteSingleFile()
   ],
+  // Base path for GitHub Pages deployment
+  // Set to repo name for gh-pages, or '/' for custom domain
+  base: process.env.GITHUB_PAGES ? '/foodlog/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: false,

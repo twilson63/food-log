@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getSessionUrl } from '../lib/storage.js';
+import { ConnectionStatus } from '../components/OfflineIndicator.jsx';
+
+const APP_VERSION = '2.0.0';
 
 export default function Settings() {
   const [apiKey, setApiKey] = useState('');
@@ -7,6 +10,7 @@ export default function Settings() {
   const [saved, setSaved] = useState(false);
   const [sessionUrl, setSessionUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     // Load settings from IndexedDB
@@ -189,9 +193,57 @@ export default function Settings() {
       </div>
 
       {/* About */}
-      <div className="text-center text-sm text-gray-400 dark:text-gray-500">
-        <p>FoodLog v2.0</p>
-        <p className="mt-1">Session-based • No account needed</p>
+      <div className="card overflow-hidden">
+        <button
+          onClick={() => setShowAbout(!showAbout)}
+          className="w-full p-4 flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+              <span className="text-xl">🍽️</span>
+            </div>
+            <div className="text-left">
+              <div className="font-medium text-gray-900 dark:text-white">About FoodLog</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Version {APP_VERSION}</div>
+            </div>
+          </div>
+          <svg
+            className={`w-5 h-5 text-gray-400 transition-transform ${showAbout ? 'rotate-180' : ''}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        {showAbout && (
+          <div className="px-4 pb-4 space-y-3">
+            <div className="flex items-center justify-between py-2 border-t border-gray-100 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Connection</span>
+              <ConnectionStatus />
+            </div>
+            <div className="flex items-center justify-between py-2 border-t border-gray-100 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Storage</span>
+              <span className="text-sm text-gray-900 dark:text-white">IndexedDB (local)</span>
+            </div>
+            <div className="flex items-center justify-between py-2 border-t border-gray-100 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">AI Model</span>
+              <span className="text-sm text-gray-900 dark:text-white">{apiKey ? 'GPT-4o Mini' : 'Offline Mode'}</span>
+            </div>
+            <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
+              <p className="text-xs text-gray-400 dark:text-gray-500">
+                FoodLog is a privacy-first food tracking app. Your data stays on your device.
+                No account required, no cloud sync.
+              </p>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <a href="/privacy" className="text-xs text-primary-600 hover:underline">Privacy Policy</a>
+              <span className="text-gray-300">•</span>
+              <a href="/terms" className="text-xs text-primary-600 hover:underline">Terms of Service</a>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,14 +1,17 @@
 {
-  "name": "web",
+  "name": "foodlog",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
+  "homepage": "https://twilson63.github.io/foodlog",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:railway": "vite build --config vite.config.railway.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
@@ -27,6 +30,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "gh-pages": "^6.3.0",
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
     "sharp": "^0.34.5",

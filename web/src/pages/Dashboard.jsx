@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit2, Trash2, Plus, Coffee, Apple, Utensils, Cookie, X } from 'lucide-react';
 import { useToast } from '../components/Toast.jsx';
+import { DashboardSkeleton } from '../components/Skeleton.jsx';
 
 // Quick-add presets
 const QUICK_FOODS = [
@@ -89,11 +90,7 @@ export default function Dashboard() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Loading...</div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error) {
