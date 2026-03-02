@@ -3,6 +3,19 @@ import { api, keys } from '../api.js';
 import { goals } from '../lib/storage.js';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Edit2, Trash2, Plus, Coffee, Apple, Utensils, Cookie, X } from 'lucide-react';
+
+// Quick-add presets
+const QUICK_FOODS = [
+  { name: '☕ Coffee', calories: 5, protein: 0, carbs: 0, fat: 0 },
+  { name: '🥚 Eggs (2)', calories: 140, protein: 12, carbs: 1, fat: 10 },
+  { name: '🥣 Oatmeal', calories: 150, protein: 5, carbs: 27, fat: 3 },
+  { name: '🍌 Banana', calories: 105, protein: 1, carbs: 27, fat: 0 },
+  { name: '🥗 Salad', calories: 120, protein: 3, carbs: 10, fat: 8 },
+  { name: '🍗 Chicken', calories: 165, protein: 31, carbs: 0, fat: 4 },
+  { name: '🍚 Rice', calories: 200, protein: 4, carbs: 45, fat: 0 },
+  { name: '🍕 Pizza Slice', calories: 285, protein: 12, carbs: 36, fat: 10 },
+];
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -10,6 +23,8 @@ export default function Dashboard() {
   const basePath = sessionId ? `/s/${sessionId}` : '';
   const queryClient = useQueryClient();
   const [dailyGoals, setDailyGoals] = useState({ calories: 2000, protein: 150, carbs: 200, fat: 65 });
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [addingFood, setAddingFood] = useState(null);
   
   // Load goals from storage
   useEffect(() => {
@@ -31,6 +46,25 @@ export default function Dashboard() {
   const proteinPercent = Math.min(100, Math.round((totals.protein / dailyGoals.protein) * 100));
   const carbsPercent = Math.min(100, Math.round((totals.carbs / dailyGoals.carbs) * 100));
   const fatPercent = Math.min(100, Math.round((totals.fat / dailyGoals.fat) * 100));
+
+  // Quick add handler
+  const handleQuickAdd = async (food) => {
+    setAddingFood(food.name);
+    try {
+      await api.createEntry({
+        description: food.name,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
+      });
+      queryClient.invalidateQueries({ queryKey: keys.today });
+    } catch (err) {
+      alert('Failed to add entry');
+    }
+    setAddingFood(null);
+    setShowQuickAdd(false);
+  };
 
   // Delete entry
   const handleDelete = async (id) => {
@@ -122,6 +156,59 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Quick Add Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Add</h2>
+          <button 
+            onClick={() => navigate(`${basePath}/add`)}
+            className="text-sm text-primary-600 dark:text-primary-400 font-medium"
+          >
+            + Custom
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-4 gap-2">
+          {QUICK_FOODS.slice(0, 4).map((food) => (
+            <button
+              key={food.name}
+              onClick={() => handleQuickAdd(food)}
+              disabled={addingFood === food.name}
+              className="card p-3 text-center hover:shadow-md transition-all active:scale-95 disabled:opacity-50"
+            >
+              <div className="text-lg mb-1">{food.name.split(' ')[0]}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{food.calories} cal</div>
+            </button>
+          ))}
+        </div>
+        
+        <button
+          onClick={() => setShowQuickAdd(!showQuickAdd)}
+          className="w-full py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+        >
+          {showQuickAdd ? 'Show less' : 'Show more options'}
+        </button>
+        
+        {showQuickAdd && (
+          <div className="grid grid-cols-2 gap-2">
+            {QUICK_FOODS.slice(4).map((food) => (
+              <button
+                key={food.name}
+                onClick={() => handleQuickAdd(food)}
+                disabled={addingFood === food.name}
+                className="card p-3 flex items-center gap-3 hover:shadow-md transition-all active:scale-95 disabled:opacity-50 text-left"
+              >
+                <span className="text-xl">{food.name.split(' ')[0]}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{food.name.split(' ').slice(1).join(' ')}</div>
+                  <div className="text-xs text-gray-500">{food.calories} cal • {food.protein}p</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Entries List */}
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Today's Entries</h2>
@@ -166,14 +253,22 @@ export default function Dashboard() {
                       </div>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleDelete(entry.id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => navigate(`${basePath}/edit/${entry.id}`)}
+                      className="p-1.5 text-gray-400 hover:text-primary-500 transition-colors"
+                      title="Edit entry"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(entry.id)}
+                      className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                      title="Delete entry"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                   {formatTime(entry.createdAt)}

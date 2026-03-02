@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AddFood from './pages/AddFood.jsx';
+import EditEntry from './pages/EditEntry.jsx';
 import History from './pages/History.jsx';
 import Stats from './pages/Stats.jsx';
 import Settings from './pages/Settings.jsx';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/s/:sessionId" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="add" element={<AddFood />} />
+            <Route path="edit/:entryId" element={<EditEntry />} />
             <Route path="history" element={<History />} />
             <Route path="stats" element={<Stats />} />
             <Route path="settings" element={<Settings />} />

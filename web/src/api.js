@@ -88,6 +88,10 @@ export const api = {
   createEntry: (data) => entries.create(data),
   updateEntry: (id, data) => entries.update(id, data),
   deleteEntry: (id) => entries.delete(id),
+  getEntry: (id) => entries.get(id),
+  
+  // Expose entries for direct access
+  entries,
   
   // Vision
   analyzePhoto: analyzeWithVision,
