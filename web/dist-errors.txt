@@ -1,0 +1,12 @@
+Errors from upload at Mon Mar 02 2026 08:47:42 GMT-0500 (Eastern Standard Time):
+Error: 402 error: Insufficient balance
+    at FG.runUpload (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:275:19486)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Rf1.uploadData (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:275:21200)
+    at async retries (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:275:21562)
+    at async N41.handler (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:275:21521)
+    at async Promise.all (index 3)
+    at async N41.drainActiveTasks (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:14:20339)
+    at async N41.drained (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:14:20238)
+    at async N41.process (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:14:18298)
+    at async N41.start (file:///Users/twilson63/.openclaw/workspace/.agents/skills/arweave/index.mjs:14:16617)

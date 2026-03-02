@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1284" height="2778" viewBox="0 0 1284 2778">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1284" height="2778" fill="url(#bg)"/>
+  <!-- White circle background for icon -->
+  <circle cx="642" cy="1389" r="256.8" fill="white" opacity="0.95"/>
+  <!-- Plate -->
+  <circle cx="642" cy="1389" r="179.76" fill="none" stroke="#1e40af" stroke-width="25.680000000000003"/>
+  <circle cx="642" cy="1389" r="143.80800000000002" fill="none" stroke="#3b82f6" stroke-width="10.272"/>
+  <!-- Text -->
+  <text x="642" y="1389" font-family="system-ui, -apple-system, sans-serif" font-size="179.76" font-weight="bold" fill="#1e40af" text-anchor="middle" dominant-baseline="middle">FL</text>
+</svg>
