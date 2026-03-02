@@ -1,8 +1,19 @@
-const CACHE_NAME = 'foodlog-v1'
+const CACHE_NAME = 'foodlog-v2'
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/favicon.svg',
+  '/icons/icon-16.png',
+  '/icons/icon-32.png',
+  '/icons/icon-70.png',
+  '/icons/icon-150.png',
+  '/icons/icon-152.png',
+  '/icons/icon-167.png',
+  '/icons/icon-180.png',
+  '/icons/icon-192.png',
+  '/icons/icon-310.png',
+  '/icons/icon-512.png'
 ]
 
 // Install event - cache static assets
