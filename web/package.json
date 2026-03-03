@@ -1,9 +1,9 @@
 {
-  "name": "foodlog",
+  "name": "snapcal",
   "private": true,
-  "version": "2.0.0",
+  "version": "1.0.0",
   "type": "module",
-  "homepage": "https://twilson63.github.io/foodlog",
+  "homepage": "https://twilson63.github.io/snapcal",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

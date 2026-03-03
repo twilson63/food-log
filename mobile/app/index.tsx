@@ -32,7 +32,7 @@ export default function HomeScreen() {
         <View style={styles.headerRow}>
           <View style={styles.headerText}>
             <Text style={styles.dateLabel}>{today}</Text>
-            <Text style={styles.title}>FoodLog</Text>
+            <Text style={styles.title}>SnapCal</Text>
           </View>
           <View style={styles.headerButtons}>
             <Link href="/history" asChild>

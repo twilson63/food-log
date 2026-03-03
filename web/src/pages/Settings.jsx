@@ -48,8 +48,8 @@ export default function Settings() {
 
   const handleClearData = async () => {
     if (confirm('Delete all food entries? This cannot be undone.')) {
-      const sessionId = localStorage.getItem('foodlog_session');
-      indexedDB.deleteDatabase(`foodlog-v2-${sessionId}`);
+      const sessionId = localStorage.getItem('snapcal_session');
+      indexedDB.deleteDatabase(`snapcal-v1-${sessionId}`);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     }
@@ -57,7 +57,7 @@ export default function Settings() {
 
   const handleNewSession = () => {
     if (confirm('Start a new journal? Your current data will remain accessible via your URL.')) {
-      localStorage.removeItem('foodlog_session');
+      localStorage.removeItem('snapcal_session');
       window.location.href = '/';
     }
   };
@@ -203,7 +203,7 @@ export default function Settings() {
               <span className="text-xl">🍽️</span>
             </div>
             <div className="text-left">
-              <div className="font-medium text-gray-900 dark:text-white">About FoodLog</div>
+              <div className="font-medium text-gray-900 dark:text-white">About SnapCal</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">Version {APP_VERSION}</div>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function Settings() {
             </div>
             <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
               <p className="text-xs text-gray-400 dark:text-gray-500">
-                FoodLog is a privacy-first food tracking app. Your data stays on your device.
+                SnapCal is a privacy-first food tracking app. Your data stays on your device.
                 No account required, no cloud sync.
               </p>
             </div>

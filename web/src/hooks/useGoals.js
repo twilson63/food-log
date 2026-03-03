@@ -7,7 +7,7 @@ const DEFAULT_GOALS = {
   fat: 65,
 }
 
-const STORAGE_KEY = 'foodlog_goals'
+const STORAGE_KEY = 'snapcal_goals'
 
 export function useGoals() {
   const [goals, setGoalsState] = useState(() => {

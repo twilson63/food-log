@@ -81,7 +81,7 @@ export default function SettingsScreen() {
       const data = await api.exportEntries('json') as any
       
       const jsonString = JSON.stringify(data, null, 2)
-      const fileName = `foodlog-export-${new Date().toISOString().split('T')[0]}.json`
+      const fileName = `snapcal-export-${new Date().toISOString().split('T')[0]}.json`
       const filePath = `${FileSystem.documentDirectory}${fileName}`
       
       await FileSystem.writeAsStringAsync(filePath, jsonString, {
@@ -91,7 +91,7 @@ export default function SettingsScreen() {
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(filePath, {
           mimeType: 'application/json',
-          dialogTitle: 'Export FoodLog Data'
+          dialogTitle: 'Export SnapCal Data'
         })
       } else {
         Alert.alert('Export Complete', `Data exported to ${fileName}`)
@@ -107,7 +107,7 @@ export default function SettingsScreen() {
       Alert.alert('Exporting...', 'Fetching your data...')
       const csvString = await api.exportEntries('csv') as string
       
-      const fileName = `foodlog-export-${new Date().toISOString().split('T')[0]}.csv`
+      const fileName = `snapcal-export-${new Date().toISOString().split('T')[0]}.csv`
       const filePath = `${FileSystem.documentDirectory}${fileName}`
       
       await FileSystem.writeAsStringAsync(filePath, csvString, {
@@ -117,7 +117,7 @@ export default function SettingsScreen() {
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(filePath, {
           mimeType: 'text/csv',
-          dialogTitle: 'Export FoodLog Data'
+          dialogTitle: 'Export SnapCal Data'
         })
       } else {
         Alert.alert('Export Complete', `Data exported to ${fileName}`)
@@ -300,7 +300,7 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About</Text>
           <View style={styles.aboutCard}>
-            <Text style={styles.aboutTitle}>FoodLog</Text>
+            <Text style={styles.aboutTitle}>SnapCal</Text>
             <Text style={styles.aboutVersion}>Version 1.0.0</Text>
             <Text style={styles.aboutDescription}>
               Track your meals with AI-powered nutrition analysis. Take a photo of your food and let the AI estimate calories, protein, carbs, and fat.

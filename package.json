@@ -1,7 +1,7 @@
 {
-  "name": "food-log",
+  "name": "snapcal",
   "version": "1.0.0",
-  "description": "Food tracking app with photo-based calorie estimation",
+  "description": "SnapCal - AI-powered food tracking. Snap a photo, know your food.",
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",

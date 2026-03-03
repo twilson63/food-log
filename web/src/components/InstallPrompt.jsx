@@ -79,7 +79,7 @@ export default function InstallPrompt() {
             <Download className="w-6 h-6 text-primary-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Install FoodLog</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white">Install SnapCal</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {platform === 'ios' ? (
                 <>Tap <Share className="w-3 h-3 inline" /> then "Add to Home Screen" <Plus className="w-3 h-3 inline" /></>

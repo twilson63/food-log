@@ -47,8 +47,8 @@ export default function Welcome() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary-100 dark:bg-primary-900/30 mb-4">
               <span className="text-4xl">🍽️</span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">FoodLog</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Your personal food journal</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">SnapCal</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Snap a photo. Know your food.</p>
           </div>
           
           <div className="card p-6 space-y-4">
@@ -67,7 +67,7 @@ export default function Welcome() {
             </button>
             
             <button
-              onClick={() => { localStorage.removeItem('foodlog_session'); setMode('new'); }}
+              onClick={() => { localStorage.removeItem('snapcal_session'); setMode('new'); }}
               className="w-full btn-ghost text-gray-500"
             >
               Start New Journal
@@ -86,8 +86,8 @@ export default function Welcome() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary-100 dark:bg-primary-900/30 mb-4">
             <span className="text-4xl">🍽️</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">FoodLog</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">AI-powered food tracking</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">SnapCal</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">Snap a photo. Know your food.</p>
         </div>
 
         {/* Feature highlights */}

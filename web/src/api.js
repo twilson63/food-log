@@ -18,7 +18,7 @@ async function analyzeWithVision(photoBase64) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${key}`,
         'HTTP-Referer': window.location.origin,
-        'X-Title': 'FoodLog',
+        'X-Title': 'SnapCal',
       },
       body: JSON.stringify({
         model: 'openai/gpt-4o-mini',

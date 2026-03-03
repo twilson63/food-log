@@ -1,7 +1,7 @@
 {
-  "name": "FoodLog - AI Food Tracker",
-  "short_name": "FoodLog",
-  "description": "Track your meals with AI-powered nutrition analysis. Snap a photo to log calories, protein, carbs, and fat.",
+  "name": "SnapCal - AI Food Tracker",
+  "short_name": "SnapCal",
+  "description": "Snap a photo, know your food. AI-powered nutrition tracking. Bring your own API key, pay $0/month.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f9fafb",

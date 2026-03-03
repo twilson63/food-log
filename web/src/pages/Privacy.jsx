@@ -2,12 +2,12 @@ export default function Privacy() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6 md:p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Privacy Policy for FoodLog</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Privacy Policy for SnapCal</h1>
         <p className="text-sm text-gray-500 mb-6">Last Updated: March 2, 2026</p>
         
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Introduction</h2>
-          <p className="text-gray-700">FoodLog ("we," "our," or "the App") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.</p>
+          <p className="text-gray-700">SnapCal ("we," "our," or "the App") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.</p>
         </section>
 
         <section className="mb-6">
@@ -92,7 +92,7 @@ export default function Privacy() {
             If you have questions about this Privacy Policy, please contact us at:
           </p>
           <ul className="text-gray-700 mt-2">
-            <li>Email: <a href="mailto:privacy@foodlog.app" className="text-blue-600 hover:underline">privacy@foodlog.app</a></li>
+            <li>Email: <a href="mailto:privacy@snapcal.app" className="text-blue-600 hover:underline">privacy@snapcal.app</a></li>
             <li>GitHub Issues: <a href="https://github.com/twilson63/food-log/issues" className="text-blue-600 hover:underline">github.com/twilson63/food-log/issues</a></li>
           </ul>
         </section>

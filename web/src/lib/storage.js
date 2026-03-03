@@ -2,7 +2,51 @@
 // Each session has its own data, accessible via URL or passphrase
 
 const DB_VERSION = 1;
-const DB_NAME = 'foodlog-v2';
+const DB_NAME = 'snapcal-v1';
+
+// Migration: Import old FoodLog data if exists
+async function migrateOldData(sessionId) {
+  const oldDbName = 'foodlog-v2';
+  const oldSessionKey = 'foodlog_session';
+  
+  try {
+    // Check for old session
+    const oldSession = localStorage.getItem(oldSessionKey);
+    if (!oldSession) return null;
+    
+    // Open old database
+    const oldDb = await new Promise((resolve, reject) => {
+      const request = indexedDB.open(`${oldDbName}-${oldSession}`, DB_VERSION);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
+    
+    // Get all entries
+    const entries = await new Promise((resolve, reject) => {
+      const transaction = oldDb.transaction('entries', 'readonly');
+      const store = transaction.objectStore('entries');
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    // Get all settings
+    const settings = await new Promise((resolve, reject) => {
+      const transaction = oldDb.transaction('settings', 'readonly');
+      const store = transaction.objectStore('settings');
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    oldDb.close();
+    
+    return { entries, settings, oldSession };
+  } catch (e) {
+    // Old DB doesn't exist or error - that's fine
+    return null;
+  }
+}
 
 // Get current session from URL or localStorage
 export function getSession() {
@@ -10,19 +54,28 @@ export function getSession() {
   const match = window.location.pathname.match(/^\/s\/([^/]+)/);
   if (match) {
     const sessionId = match[1];
-    localStorage.setItem('foodlog_session', sessionId);
+    localStorage.setItem('snapcal_session', sessionId);
     return sessionId;
   }
   
   // Check localStorage
-  const stored = localStorage.getItem('foodlog_session');
+  const stored = localStorage.getItem('snapcal_session');
   if (stored) {
     return stored;
   }
   
+  // Check for old foodlog session and migrate
+  const oldSession = localStorage.getItem('foodlog_session');
+  if (oldSession) {
+    // Migrate old session key
+    localStorage.setItem('snapcal_session', oldSession);
+    localStorage.removeItem('foodlog_session');
+    return oldSession;
+  }
+  
   // Generate new session
   const newSession = generateSessionId();
-  localStorage.setItem('foodlog_session', newSession);
+  localStorage.setItem('snapcal_session', newSession);
   return newSession;
 }
 
@@ -45,7 +98,7 @@ export function createSession(passphrase) {
     .replace(/^-|-$/g, '')
     .substring(0, 50);
   
-  localStorage.setItem('foodlog_session', sessionId);
+  localStorage.setItem('snapcal_session', sessionId);
   return sessionId;
 }
 
@@ -274,7 +327,7 @@ export function getSessionUrl() {
 
 export function navigateToSession(sessionId) {
   window.history.pushState({}, '', `/s/${sessionId}`);
-  localStorage.setItem('foodlog_session', sessionId);
+  localStorage.setItem('snapcal_session', sessionId);
   // Reload to reinitialize IndexedDB for new session
   window.location.reload();
 }

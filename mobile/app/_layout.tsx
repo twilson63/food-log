@@ -25,7 +25,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="index"
           options={{
-            title: 'FoodLog',
+            title: 'SnapCal',
             headerRight: () => (
               <Link href="/search" asChild>
                 <TouchableOpacity style={{ marginRight: 16 }}>

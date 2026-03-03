@@ -2,17 +2,17 @@ export default function Terms() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6 md:p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Terms of Service for FoodLog</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Terms of Service for SnapCal</h1>
         <p className="text-sm text-gray-500 mb-6">Last Updated: March 2, 2026</p>
         
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Acceptance of Terms</h2>
-          <p className="text-gray-700">By downloading, installing, or using FoodLog ("the App"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App.</p>
+          <p className="text-gray-700">By downloading, installing, or using SnapCal ("the App"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App.</p>
         </section>
 
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">2. Description of Service</h2>
-          <p className="text-gray-700 mb-2">FoodLog is a nutrition tracking application that allows users to:</p>
+          <p className="text-gray-700 mb-2">SnapCal is a nutrition tracking application that allows users to:</p>
           <ul className="list-disc list-inside text-gray-700 space-y-1">
             <li>Log food entries with nutritional information</li>
             <li>Use AI-powered photo analysis to estimate calories and macronutrients</li>
@@ -24,7 +24,7 @@ export default function Terms() {
 
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">3. User Accounts</h2>
-          <p className="text-gray-700">FoodLog can be used without creating an account. All data is stored locally on your device. If you choose to create an account for cloud sync features, you are responsible for maintaining the confidentiality of your account credentials.</p>
+          <p className="text-gray-700">SnapCal can be used without creating an account. All data is stored locally on your device. If you choose to create an account for cloud sync features, you are responsible for maintaining the confidentiality of your account credentials.</p>
         </section>
 
         <section className="mb-6">
@@ -60,7 +60,7 @@ export default function Terms() {
 
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">8. Intellectual Property</h2>
-          <p className="text-gray-700">The App, including its original content, features, and functionality, is owned by FoodLog and is protected by international copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, sell, or lease any part of the App.</p>
+          <p className="text-gray-700">The App, including its original content, features, and functionality, is owned by SnapCal and is protected by international copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, sell, or lease any part of the App.</p>
         </section>
 
         <section className="mb-6">
@@ -87,7 +87,7 @@ export default function Terms() {
           <h2 className="text-lg font-semibold text-gray-900 mb-2">13. Contact Information</h2>
           <p className="text-gray-700">For questions about these Terms, please contact us at:</p>
           <ul className="text-gray-700 mt-2">
-            <li>Email: <a href="mailto:legal@foodlog.app" className="text-blue-600 hover:underline">legal@foodlog.app</a></li>
+            <li>Email: <a href="mailto:legal@snapcal.app" className="text-blue-600 hover:underline">legal@snapcal.app</a></li>
             <li>GitHub: <a href="https://github.com/twilson63/food-log" className="text-blue-600 hover:underline">github.com/twilson63/food-log</a></li>
           </ul>
         </section>

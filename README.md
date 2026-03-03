@@ -1,36 +1,37 @@
-# FoodLog
+# SnapCal
 
-A food tracking system with photo-based calorie estimation using OpenAI Vision. Includes a REST API backend and an Expo mobile app.
+**Snap a photo. Know your food.**
+
+AI-powered food tracking with privacy-first design. Bring your own API key, pay $0/month.
 
 ## Project Structure
 
 ```
-food-log/
-├── src/              # Backend API (Hono + SQLite)
-│   ├── index.js      # Server entry point
-│   ├── db/           # Database layer
-│   ├── routes/       # API routes
-│   └── services/     # Vision service
+snapcal/              (formerly food-log)
+├── web/              # React PWA (Vite + Tailwind)
+│   ├── src/          # React components
+│   ├── public/       # Static assets
+│   └── dist/         # Build output
 ├── mobile/           # Expo React Native app
 │   ├── app/          # Screens (expo-router)
 │   ├── components/   # Reusable UI components
-│   ├── services/     # API client
-│   └── hooks/        # Custom React hooks
-└── data/             # SQLite database files
+│   └── assets/       # App icons
+└── src/              # Optional backend (Hono + SQLite)
 ```
 
 ## Features
 
-- **SQLite Persistence** - Production-ready database with migrations
-- **REST API** - Full CRUD operations for food entries
-- **Vision Analysis** - Automatic calorie/macro estimation from food photos
-- **Daily Tracking** - Today's entries with totals
-- **Stats** - Recent days summary
+- **BYOK (Bring Your Own Key)** - Use your own OpenRouter/OpenAI API key
+- **Privacy-First** - All data stored locally in IndexedDB
+- **Offline Capable** - Works without internet (PWA)
+- **Session-Based URLs** - Share journals via unique URLs
+- **AI Vision Analysis** - Automatic calorie/macro estimation from food photos
+- **Zero Cost** - No subscription, pay only for your own API usage
 
 ## Live Deployments
 
-- **Web PWA:** https://foodlog-app.surge.sh/ (client-side, IndexedDB storage)
-- **Backend API:** https://api-production-6869.up.railway.app/ (SQLite persistence)
+- **Web PWA:** https://snapcal-app.surge.sh/ (coming soon)
+- **Landing Page:** https://zenbin.org/p/snapcal
 
 ## Quick Start
 
